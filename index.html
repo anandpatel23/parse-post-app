@@ -21,15 +21,48 @@
       <p><textarea id="post-content"></textarea></p>
       <p><input id="post-submit" type="submit"></p>
     </form>
+
+    <ul id="list-posts">
+      <!-- 
+        list of posts 
+        <li>
+          <h3>
+          <p>
+      -->
+
+    </ul>
     
   </div>
 
   <script type="text/javascript">
     Parse.initialize("wk0RdqFZhEZfURx7dTpVRebHt2u38OGXKDT53d3o", "AZNULOCpP1J7D7twgXTPxlk1ueK2QWaHZuhE1pex");
-    
     // represents the class
     var Post = Parse.Object.extend("Post");
 
+    function getPosts(){
+      var query = new Parse.Query(Post);
+      query.find({
+        success: function(results){
+          var output = "";
+          for(var i in results){
+            var title = results[i].get("title");
+            var content = results[i].get("content");
+            output += "<li>";
+            output += "<h3>" + title + "</h3>";
+            output += "<p>" + content + "</p>";
+            output += "</li>";
+          }
+          $("#list-posts").html(output);
+        }, 
+        error: function(error){
+          console.log("Query Error: " + error.message);
+        }
+      });
+    }
+
+    getPosts();
+
+    // submit post
     $("#post-form").submit(function(event){
       event.preventDefault();
       var title = $("#post-title").val();
@@ -43,14 +76,13 @@
       // send to database
       newPost.save({
         success: function(){
-
+          getPosts();
         }, 
         error: function(error){
           console.log("Error: " + error.message);
         }
       });
     });
-
   </script>
 </body>
 
