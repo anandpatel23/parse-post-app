@@ -129,11 +129,13 @@
       event.preventDefault();
       var title = $("#post-title").val();
       var content = $("#post-content").val();
+      var user = Parse.User.current();
 
       // instance of Post class
       var newPost = new Post();
       newPost.set("title", title);
       newPost.set("content", content);
+      newPost.set("user", user);
 
       // send to database
       newPost.save({
