@@ -14,6 +14,8 @@
 <body>
   
   <div id="main">
+
+    <div id="current-user"></div>
     <h1>Log Out!</h1>
     <div>
       <button id="logout">Log Out</button>
@@ -58,8 +60,19 @@
     // represents the class
     var Post = Parse.Object.extend("Post");
 
+    function checkLogin(){
+      if (Parse.User.current()){
+        $("#current-user").html("User: " + Parse.User.current().get("username"));
+      } else {
+        $("#current-user").html("");
+      }
+    }
+
+    checkLogin();
+
     $("#logout").click(function(event){
       Parse.User.logOut();
+      checkLogin();
     });
 
     $("#login").submit(function(event){
@@ -70,7 +83,7 @@
 
       Parse.User.logIn(name, pass, {
         success: function(user){
-          console.log("Log in Success!");
+          checkLogin();
         }, error: function(user, error){
           console.log("Log in Error: " + error.message);
         }
