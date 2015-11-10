@@ -103,14 +103,21 @@
 
     function getPosts(){
       var query = new Parse.Query(Post);
+
+      query.include("user");
+
       query.find({
         success: function(results){
           var output = "";
           for(var i in results){
             var title = results[i].get("title");
             var content = results[i].get("content");
+            var user = results[i].get("user");
+            var username = user.get("username");
+
             output += "<li>";
             output += "<h3>" + title + "</h3>";
+            output += "<small>" + username + "</small>";
             output += "<p>" + content + "</p>";
             output += "</li>";
           }
