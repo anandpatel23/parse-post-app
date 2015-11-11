@@ -38,6 +38,7 @@
     <form id="post-form">
       <p><input id="post-title" type="text"></p>
       <p><textarea id="post-content"></textarea></p>
+      <p><input id="post-file" type="file"></p>
       <p><input id="post-submit" type="submit"></p>
     </form>
 
@@ -144,14 +145,40 @@
       newPost.set("content", content);
       newPost.set("user", user);
 
-      // send to database
-      newPost.save({
-        success: function(){
-          getPosts();
-        }, error: function(error){
-          console.log("Error: " + error.message);
-        }
-      });
+      // get file from form input
+      var fileElement = $("#post-file")[0];
+      var filePath = $("#post-file").val();
+      var fileName = filePath.split("\\").pop();
+
+      if(fileElement.files.length > 0){
+        var file = fileElement.files[0];
+        var newFile = new Parse.File(fileName, file);
+        newFile.save({
+          success: function(){
+
+          }, error: function(file, error){
+              console.log("File Save Error: " + error.message);
+          }
+        }).then(function(theFile){
+            newPost.set("file", theFile);
+            newPost.save({success: function(){
+
+            }, error: function(error){
+                console.log("Post Save with File Error: " + error.message);
+            }
+          });
+        });
+      } else{
+          // send to database
+          newPost.save({
+            success: function(){
+              getPosts();
+            }, error: function(error){
+              console.log("Error: " + error.message);
+            }
+          });
+      }
+
     });
   </script>
 </body>
