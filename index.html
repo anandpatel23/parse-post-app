@@ -115,11 +115,20 @@
             var content = results[i].get("content");
             var user = results[i].get("user");
             var username = user.get("username");
+            
+            var img = "";
+
+            if(results[i].get("file")){
+              var file = results[i].get("file");
+              var url = file.url();
+              img = "<img src='" + url + "'>";
+            }
 
             output += "<li>";
             output += "<h3>" + title + "</h3>";
             output += "<small>" + username + "</small>";
             output += "<p>" + content + "</p>";
+            output += img;
             output += "</li>";
           }
           $("#list-posts").html(output);
