@@ -46,6 +46,13 @@
       <h1 id="post-detail-title"></h1>
       <small id="post-detail-author"></small>
       <p id="post-detail-content"></p>
+      <img id="post-detail-image" src="">
+
+      <form id="post-comment-form">
+        <input id="post-comment-id" type="hidden" value="">
+        <textarea id="post-comment-comment"></textarea>
+        <input id="post-comment-submit" type="submit">
+      </form>
     </div>
 
     <ul id="list-posts">
@@ -126,11 +133,18 @@
           var user = results[0].get("user");
           var username = user.get("username");
           var id = results[0].id;
+          var src = "";
+
+          if(results[0].get("file")){
+            src = results[0].get("file").url();
+          }
+
           $("#post-detail-title").html(title);
           $("#post-detail-author").html(username);
           $("#post-detail-content").html(content);
-          $("post-detail").attr("data-id", id);
-          
+          $("#post-detail").attr("data-id", id);
+          $("#post-comment-id").val(id);
+          $("#post-detail-image").attr("src", src);
         }, error: function(error){
           console.log(error.message);
         }
