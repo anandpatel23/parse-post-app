@@ -63,8 +63,28 @@
 
   <script type="text/javascript">
     Parse.initialize("wk0RdqFZhEZfURx7dTpVRebHt2u38OGXKDT53d3o", "AZNULOCpP1J7D7twgXTPxlk1ueK2QWaHZuhE1pex");
-    // represents the class
     var Post = Parse.Object.extend("Post");
+    var Comment = Parse.Object.extend("Comment");
+
+    $("#post-comment-form").submit(function(event){
+      event.preventDefault();
+      var postId = $("#post-comment-id").val();
+      var post = new Post({id: postId});
+      var postComment = $("#post-comment").val();
+      var user = Parse.User.current();
+      var comment = new Comment();
+
+      comment.set("content", postComment);
+      comment.set("user", user);
+      comment.set("post", post);
+      comment.save({
+        success: function(obj){
+          console.log("Comment Saved!");
+        }, error: function(obj, error){
+          console.log("Comment Save Error: " + error.message);
+        }
+      });
+    });
 
     function checkLogin(){
       if (Parse.User.current()){
